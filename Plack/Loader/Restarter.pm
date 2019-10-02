@@ -26,22 +26,13 @@ sub _fork_and_start {
     delete $self->{pid}; # re-init in case it's a restart
 
     my $pid = fork;
-    die "Can't fork: $!" unless defined $pid;
+    #die "Can't fork: $!" unless defined $pid;
 
     if ($pid == 0) { # child
         return $server->run($self->{builder}->());
     } else {
         $self->{pid} = $pid;
     }
-}
-
-sub _kill_child {
-    my $self = shift;
-
-    my $pid = $self->{pid} or return;
-    warn "Killing the existing server (pid:$pid)\n";
-    kill 'TERM' => $pid;
-    waitpid($pid, 0);
 }
 
 sub valid_file {
@@ -64,7 +55,7 @@ sub run {
     require Filesys::Notify::Simple;
     my $watcher = Filesys::Notify::Simple->new($self->{watch});
     warn "Watching @{$self->{watch}} for file updates.\n";
-    local $SIG{TERM} = sub { $self->_kill_child; exit(0); };
+    # local $SIG{TERM} = sub { $self->_kill_child; exit(0); };
 
     while (1) {
         my @restart;

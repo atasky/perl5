@@ -188,7 +188,7 @@ sub matching {
             my $k;
             $k = $1 if $mkey =~ s/__(.*)/__/;
             if (my $m = $MATCH{$mkey}) {
-                #print "$ikey $mkey\n";
+                print "$ikey $mkey\n";
                 my($c, $o);
                 my @arg = (
                     defined($k) ? $k : (),
@@ -198,7 +198,7 @@ sub matching {
                 $v = [$v] unless ref($v) eq "ARRAY";
                 for (@$v) {
                     ($c, $o) = $m->($_, @arg);
-                    #print "  - $_ ==> $c $o\n";
+                    print "  - $_ ==> $c $o\n";
                     last if $c;
                 }
                 next ITEM unless $c;
@@ -250,10 +250,10 @@ version 6.13
  use HTTP::Config;
  my $c = HTTP::Config->new;
  $c->add(m_domain => ".example.com", m_scheme => "http", verbose => 1);
- 
+
  use HTTP::Request;
  my $request = HTTP::Request->new(GET => "http://www.example.com");
- 
+
  if (my @m = $c->matching($request)) {
     print "Yadayada\n" if $m[0]->{verbose};
  }
@@ -449,4 +449,3 @@ __END__
 
 
 #ABSTRACT: Configuration for request and response objects
-
